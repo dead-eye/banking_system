@@ -17,7 +17,6 @@
 
 using namespace std;
 
-
 //function prototypes
 Account * loadAccountArray(Account [], int &);
 Account * enlargeAccountArray(Account [], int &, Account);
