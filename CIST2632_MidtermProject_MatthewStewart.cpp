@@ -6,24 +6,6 @@
     This program will simulate a banking system for a small bank.
 */
 
-// begin code added for password obfuscation /////////////////////////
-// platform specific includes										//
-#ifdef __APPLE__													//
-  #include <termios.h>    // terminal manipulation library			//
-  #include <unistd.h>     // std definitions STDIN_FILENO			//
-#elif defined __linux__												//
- #include <termios.h>												//
- #include <unistd.h>												//
-#elif defined _WIN32 || defined _WIN64								//
-  #include <conio.h>												//
-#else																//
-#error "unknown platform"											//
-#endif																//
-																	//
-// these includes work on all platforms								//
-#include <cstdlib>													//
-#include <cstdio>													//
-// end code added for password obfuscation ///////////////////////////
 #include <iostream>
 #include <string>
 #include <fstream>
