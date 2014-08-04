@@ -1,0 +1,7 @@
+100000000 Nathan Stevens passw0rd 600
+100000001 Susan Grady rover 725
+100000002 Mickey Mouse orlando 4400.88
+100000003 Bruce Banner hulksmash 250
+100000004 Max Stewart abc123 200000
+100000005 Whit Stewart sudo 150000
+100000006 Matthew Stewart asdfasdf 1406.67
