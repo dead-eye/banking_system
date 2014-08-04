@@ -6,6 +6,24 @@
     This program will simulate a banking system for a small bank.
 */
 
+// begin code added for password obfuscation /////////////////////////
+// platform specific includes										//
+#ifdef __APPLE__													//
+  #include <termios.h>    // terminal manipulation library			//
+  #include <unistd.h>     // std definitions STDIN_FILENO			//
+#elif defined __linux__												//
+ #include <termios.h>												//
+ #include <unistd.h>												//
+#elif defined _WIN32 || defined _WIN64								//
+  #include <conio.h>												//
+#else																//
+#error "unknown platform"											//
+#endif																//
+																	//
+// these includes work on all platforms								//
+#include <cstdlib>													//
+#include <cstdio>													//
+// end code added for password obfuscation ///////////////////////////
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -16,6 +34,69 @@
 #include "Check.h"
 
 using namespace std;
+
+// begin code added for password obfuscation /////////////////////////
+#if defined(__APPLE__) || defined(__linux__)						//
+int getch() {														//
+																	//
+    struct termios oldtc, newtc;									//
+    int ch;															//
+																	//
+	// obtains current terminal settings							//
+    tcgetattr(STDIN_FILENO, &oldtc);								//
+																	//
+	// make a copy of the old settings								//
+    newtc = oldtc;													//
+																	//
+	// removes the terminal echoing									//
+    newtc.c_lflag &= ~(ICANON | ECHO);								//
+																	//
+	// sets the terminal to the non-echoing version					//
+    tcsetattr(STDIN_FILENO, TCSANOW, &newtc);						//
+																	//
+	// reads a character with no echo								//
+    ch=getchar();													//
+																	//
+	// restore the old settings (with echo)							//
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldtc);						//
+																	//
+    return ch;														//
+}																	//
+#elif defined _WIN32 || defined _WIN64								//
+string getPass(int width)											//
+{																	//
+     cout<<"[";														//
+     for (int i=0; i<width; i++)									//
+         cout<<"_";													//
+     cout<<"]";														//
+     for (int i=0; i<(width+1); i++)								//
+         cout<<"\b";												//
+     char letra,pass[16];											//
+     int i=0;														//
+     do																//
+     {																//
+          letra = _getch();											//
+          if (letra!=8 && letra!=13 && i<width)						//
+          {															//
+             pass[i]=letra;											//
+             cout<<"*";												//
+             i++;													//
+          }															//
+          else if (letra==8 && i>0)									//
+          {															//
+               cout<<"\b"<<"_"<<"\b";								//
+               i--;													//
+          }															//
+     }																//
+     while (letra!=13);												//
+     pass[i]='\0';													//
+     return pass;													//
+}																	//
+#else																//
+#error "unknown platform"											//
+#endif																//
+// end code added for password obfuscation ///////////////////////////
+
 
 //function prototypes
 Account * loadAccountArray(Account [], int &);
@@ -265,7 +346,27 @@ Account * addNewAccount(Account accounts[], int & size)
 	cout << "Account Holder's last name: ";
 	cin >> lastName;
 	cout << "Password for the account: ";
-	cin >> password;
+//	cin >> password;						// original line getting password without obfuscation
+// begin code added for password obfuscation /////////////////////////
+																	//
+	#if defined(__APPLE__) || defined(__linux__)					//
+		int ch;														//
+		for (int i = 0; i < 16; i++)								//
+		{															//
+			ch = getch();											//
+			password += ch;											//
+			cout << "*";											//
+		}															//
+																	//
+	#elif defined _WIN32 || defined _WIN64							//
+																	//
+		password=getPass(16);										//
+																	//
+	#else															//
+	#error "unknown platform"										//
+	#endif															//
+// end code added for password obfuscation ///////////////////////////
+	cout << endl;
 	cout << "Beginning balance: ";
 	cin >> balance;
 
@@ -340,7 +441,27 @@ void loginAccount(Account accounts[], int size)
 
 			//prompt for password
 			cout << "Please enter your password: ";
-			cin >> password;
+//			cin >> password;						// original line getting password without obfuscation
+			// begin code added for password obfuscation /////////////////////////
+																				//
+				#if defined(__APPLE__) || defined(__linux__)					//
+					int ch;														//
+					for (int i = 0; i < 16; i++)								//
+					{															//
+						ch = getch();											//
+						password += ch;											//
+						cout << "*";											//
+					}															//
+																				//
+				#elif defined _WIN32 || defined _WIN64							//
+																				//
+					password=getPass(16);										//
+																				//
+				#else															//
+				#error "unknown platform"										//
+				#endif															//
+			// end code added for password obfuscation ///////////////////////////
+			cout << endl;
 
 			try
 			{
@@ -356,7 +477,27 @@ void loginAccount(Account accounts[], int size)
 
 				//prompt for password again
 				cout << "\nPlease try again: ";
-				cin >> password;
+//				cin >> password;						// original line getting password without obfuscation
+				// begin code added for password obfuscation /////////////////////////
+																					//
+					#if defined(__APPLE__) || defined(__linux__)					//
+						int ch;														//
+						for (int i = 0; i < 16; i++)								//
+						{															//
+							ch = getch();											//
+							password += ch;											//
+							cout << "*";											//
+						}															//
+																					//
+					#elif defined _WIN32 || defined _WIN64							//
+																					//
+						password=getPass(16);										//
+																					//
+					#else															//
+					#error "unknown platform"										//
+					#endif															//
+				// end code added for password obfuscation ///////////////////////////
+				cout << endl;
 
 				try
 				{
@@ -372,7 +513,27 @@ void loginAccount(Account accounts[], int size)
 
 					//prompt for password - last chance
 					cout << "\nPlease try again: ";
-					cin >> password;
+//					cin >> password;						// original line getting password without obfuscation
+					// begin code added for password obfuscation /////////////////////////
+																						//
+						#if defined(__APPLE__) || defined(__linux__)					//
+							int ch;														//
+							for (int i = 0; i < 16; i++)								//
+							{															//
+								ch = getch();											//
+								password += ch;											//
+								cout << "*";											//
+							}															//
+																						//
+						#elif defined _WIN32 || defined _WIN64							//
+																						//
+							password=getPass(16);										//
+																						//
+						#else															//
+						#error "unknown platform"										//
+						#endif															//
+					// end code added for password obfuscation ///////////////////////////
+					cout << endl;
 
 					
 					try
